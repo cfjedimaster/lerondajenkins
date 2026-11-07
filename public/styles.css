@@ -1309,8 +1309,19 @@ body {
 }
 
 .footer-meta {
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-size: 0.82rem;
+}
+
+.footer-link {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+
+.footer-link:hover {
+  color: var(--gold-bright);
+  text-decoration: underline;
 }
 
 /* Responsive Breakpoints */

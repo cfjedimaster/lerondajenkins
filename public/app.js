@@ -975,10 +975,6 @@ function renderTelemetryTab(payload) {
     null,
     2
   );
-
-  document.getElementById('footer-meta').textContent = `${meta.namespace || 'profile-forever-us'} · ${
-    (meta.callsMade ?? 15) - (meta.callsFailed ?? 0)
-  }/${meta.callsMade ?? 15} endpoints succeeded`;
 }
 
 function renderAll(payload) {
