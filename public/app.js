@@ -268,23 +268,36 @@ function renderKpis(payload) {
   document.getElementById('kpi-titles-count').textContent = `${titles.length} / ${reps.length}`;
 }
 
+function applyMediaViewClasses(imgEl, key) {
+  const isCutout = key.includes('raw') || key === 'main';
+  const isPortrait = key.includes('avatar') || key === 'inset';
+  imgEl.classList.toggle('is-cutout', isCutout);
+  imgEl.classList.toggle('is-portrait', isPortrait);
+}
+
 function renderMediaStage(payload) {
   const imgObj = payload.character?.img || {};
   const mainImg = document.getElementById('char-main-img');
   const noImg = document.getElementById('char-no-img');
   const switcher = document.getElementById('media-switcher');
 
-  const views = [
-    { key: 'main-raw', label: 'Cutout Render' },
-    { key: 'main', label: 'Full Scene' },
-    { key: 'inset', label: 'Bust' },
-    { key: 'avatar', label: 'Portrait' },
-  ].filter((v) => Boolean(imgObj[v.key]));
+  const labelMap = {
+    'main-raw': 'Cutout Render',
+    main: 'Full Scene',
+    inset: 'Bust',
+    avatar: 'Portrait',
+    'main-sd-raw': 'SD Cutout',
+    'avatar-sd': 'SD Portrait',
+  };
 
-  // Include any additional media keys not in the standard 4
+  const preferredOrder = ['main-raw', 'main', 'inset', 'avatar', 'main-sd-raw', 'avatar-sd'];
+  const views = preferredOrder
+    .filter((k) => Boolean(imgObj[k]))
+    .map((k) => ({ key: k, label: labelMap[k] || k }));
+
   Object.keys(imgObj).forEach((k) => {
     if (!views.some((v) => v.key === k) && imgObj[k]) {
-      views.push({ key: k, label: k });
+      views.push({ key: k, label: labelMap[k] || k });
     }
   });
 
@@ -298,11 +311,12 @@ function renderMediaStage(payload) {
   mainImg.hidden = false;
   noImg.hidden = true;
   mainImg.src = imgObj[views[0].key];
+  applyMediaViewClasses(mainImg, views[0].key);
 
   switcher.innerHTML = views
     .map(
       (v, idx) => `
-      <button type="button" class="media-btn ${idx === 0 ? 'active' : ''}" data-img-url="${escapeHtml(imgObj[v.key])}">
+      <button type="button" class="media-btn ${idx === 0 ? 'active' : ''}" data-img-key="${escapeHtml(v.key)}" data-img-url="${escapeHtml(imgObj[v.key])}">
         ${escapeHtml(v.label)}
       </button>
     `
@@ -314,6 +328,7 @@ function renderMediaStage(payload) {
       switcher.querySelectorAll('.media-btn').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       mainImg.src = btn.dataset.imgUrl;
+      applyMediaViewClasses(mainImg, btn.dataset.imgKey || '');
     });
   });
 }
