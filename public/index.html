@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leronda Jenkins — WoW Forever Armory Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-vignette"></div>
+  </div>
+
+  <!-- Top Navigation / Status Bar -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-crest" aria-hidden="true">⚔️</span>
+        <div>
+          <span class="brand-eyebrow">World of Warcraft · Forever Armory</span>
+          <span class="brand-title">Azeroth Character Registry</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span id="namespace-badge" class="pill-badge">profile-forever-us</span>
+        <button id="refresh-btn" class="btn-ghost" type="button" title="Refresh live data from Battle.net">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+            <path d="M16 16h5v5"/>
+          </svg>
+          <span>Sync Armory</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <!-- Loading State -->
+    <section id="loading-state" class="state-card" aria-live="polite">
+      <div class="rune-spinner" aria-hidden="true"></div>
+      <h2 class="state-title">Summoning Character Record…</h2>
+      <p class="state-subtitle">Querying Battle.net Forever endpoints for <strong>Leronda Jenkins</strong></p>
+      <div class="skeleton-grid">
+        <div class="skeleton-box skel-tall"></div>
+        <div class="skeleton-box skel-main"></div>
+        <div class="skeleton-box skel-tall"></div>
+      </div>
+    </section>
+
+    <!-- Error State -->
+    <section id="error-state" class="state-card error-card" hidden aria-live="assertive">
+      <div class="error-icon" aria-hidden="true">⚠️</div>
+      <h2 class="state-title">Failed to Commune with the Armory</h2>
+      <p id="error-message" class="state-subtitle"></p>
+      <button id="retry-btn" class="btn-gold" type="button">Try Again</button>
+    </section>
+
+    <!-- Loaded Profile Content -->
+    <div id="profile-content" hidden>
+      <!-- Hero Character Banner -->
+      <section class="hero-banner" id="hero-banner">
+        <div class="hero-identity">
+          <div class="avatar-ring-wrap">
+            <img id="char-avatar" class="char-avatar" src="" alt="Leronda Jenkins Portrait" hidden />
+            <div id="char-avatar-fallback" class="char-avatar-fallback">LJ</div>
+            <span id="char-level-pill" class="level-orb" title="Character Level">--</span>
+          </div>
+          <div class="hero-title-block">
+            <div class="hero-eyebrow-row">
+              <span id="char-faction-badge" class="faction-pill">Azeroth</span>
+              <span id="char-region-badge" class="region-pill">US · Forever</span>
+              <span id="char-title-prefix" class="char-title-badge" hidden></span>
+            </div>
+            <h1 id="char-name" class="char-name">Leronda Jenkins</h1>
+            <p id="char-subtitle" class="char-subtitle">Loading identity…</p>
+          </div>
+        </div>
+
+        <div class="hero-vitals">
+          <div class="vital-card ilvl-vital">
+            <span class="vital-label">Equipped iLvl</span>
+            <strong id="char-ilvl-equipped" class="vital-value gold-text">--</strong>
+            <span id="char-ilvl-avg" class="vital-sub">Avg: --</span>
+          </div>
+          <div class="vital-card">
+            <span class="vital-label">Specialization</span>
+            <strong id="char-spec" class="vital-value">--</strong>
+            <span id="char-class-sub" class="vital-sub">--</span>
+          </div>
+          <div class="vital-card">
+            <span class="vital-label">Lineage</span>
+            <strong id="char-race" class="vital-value">--</strong>
+            <span id="char-gender" class="vital-sub">--</span>
+          </div>
+          <div class="vital-card">
+            <span class="vital-label">Last Seen</span>
+            <strong id="char-last-login" class="vital-value">--</strong>
+            <span id="char-last-login-exact" class="vital-sub">--</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quick Summary Stat Strip -->
+      <section class="kpi-strip" aria-label="Character Summary Statistics">
+        <div class="kpi-tile">
+          <span class="kpi-icon" aria-hidden="true">🛡️</span>
+          <div>
+            <span class="kpi-num" id="kpi-gear-count">0</span>
+            <span class="kpi-label">Equipped Pieces</span>
+          </div>
+        </div>
+        <div class="kpi-tile">
+          <span class="kpi-icon" aria-hidden="true">🐎</span>
+          <div>
+            <span class="kpi-num" id="kpi-mounts-count">0</span>
+            <span class="kpi-label">Mounts</span>
+          </div>
+        </div>
+        <div class="kpi-tile">
+          <span class="kpi-icon" aria-hidden="true">🐾</span>
+          <div>
+            <span class="kpi-num" id="kpi-pets-count">0</span>
+            <span class="kpi-label">Battle Pets</span>
+          </div>
+        </div>
+        <div class="kpi-tile">
+          <span class="kpi-icon" aria-hidden="true">🎲</span>
+          <div>
+            <span class="kpi-num" id="kpi-toys-count">0</span>
+            <span class="kpi-label">Toys &amp; Heirlooms</span>
+          </div>
+        </div>
+        <div class="kpi-tile">
+          <span class="kpi-icon" aria-hidden="true">📜</span>
+          <div>
+            <span class="kpi-num" id="kpi-quests-count">0</span>
+            <span class="kpi-label">Quests Completed</span>
+          </div>
+        </div>
+        <div class="kpi-tile">
+          <span class="kpi-icon" aria-hidden="true">👑</span>
+          <div>
+            <span class="kpi-num" id="kpi-titles-count">0</span>
+            <span class="kpi-label">Titles &amp; Reps</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Armory Paper Doll & Character Render Stage -->
+      <section class="armory-stage-section" aria-label="Character Armory Showcase">
+        <div class="armory-grid">
+          <!-- Left Equipment Column -->
+          <div id="paperdoll-left" class="paperdoll-col paperdoll-left" aria-label="Left Equipment Slots"></div>
+
+          <!-- Center Character Render Canvas -->
+          <div class="character-stage" id="character-stage">
+            <div class="stage-controls">
+              <div class="media-switcher" id="media-switcher" role="group" aria-label="Character View Mode"></div>
+            </div>
+
+            <div class="stage-canvas">
+              <div class="stage-halo" aria-hidden="true"></div>
+              <img id="char-main-img" class="char-main-img" src="" alt="Leronda Jenkins Full Character Render" />
+              <div id="char-no-img" class="char-no-img" hidden>
+                <span class="no-img-crest">⚔️</span>
+                <p>Character render unavailable</p>
+              </div>
+            </div>
+
+            <!-- Weapons Bottom Row -->
+            <div id="paperdoll-weapons" class="paperdoll-weapons" aria-label="Weapon Slots"></div>
+          </div>
+
+          <!-- Right Equipment Column -->
+          <div id="paperdoll-right" class="paperdoll-col paperdoll-right" aria-label="Right Equipment Slots"></div>
+        </div>
+
+        <!-- Active Item / Stat Inspector Drawer -->
+        <aside class="inspector-panel" id="inspector-panel" aria-live="polite">
+          <div class="inspector-header">
+            <span class="inspector-eyebrow">Armory Inspector</span>
+            <button id="inspector-reset" class="btn-text" type="button" hidden>Show Overview</button>
+          </div>
+          <div id="inspector-body" class="inspector-body">
+            <!-- Populated dynamically with selected item details or character summary -->
+          </div>
+        </aside>
+      </section>
+
+      <!-- Navigation Tabs for Deep-Dive Sections -->
+      <nav class="armory-tabs" role="tablist" aria-label="Character Profile Sections">
+        <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-equipment" id="tab-equipment" data-tab="equipment" type="button">
+          ⚔️ Equipment &amp; Specs
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-collections" id="tab-collections" data-tab="collections" type="button">
+          🐎 Collections
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-professions" id="tab-professions" data-tab="professions" type="button">
+          ⚒️ Professions &amp; Reputations
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-chronicle" id="tab-chronicle" data-tab="chronicle" type="button">
+          📖 Appearance, Titles &amp; Quests
+        </button>
+        <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-telemetry" id="tab-telemetry" data-tab="telemetry" type="button">
+          🔮 Forever API Telemetry
+        </button>
+      </nav>
+
+      <!-- Tab Panel 1: Equipment & Specializations -->
+      <section id="panel-equipment" class="tab-panel active" role="tabpanel" aria-labelledby="tab-equipment">
+        <div class="panel-split">
+          <div class="panel-card">
+            <div class="card-header">
+              <h2>Equipped Gear Manifest</h2>
+              <span id="equipment-summary-pill" class="count-pill">0 items</span>
+            </div>
+            <div id="equipment-list" class="equipment-list-grid"></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="card-header">
+              <h2>Specializations &amp; Talents</h2>
+              <span id="spec-summary-pill" class="count-pill"></span>
+            </div>
+            <div id="specializations-content" class="spec-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Panel 2: Collections -->
+      <section id="panel-collections" class="tab-panel" role="tabpanel" aria-labelledby="tab-collections" hidden>
+        <div class="panel-card">
+          <div class="collections-toolbar">
+            <div class="subtab-group" role="tablist" aria-label="Collection Categories">
+              <button class="subtab-btn active" data-col="mounts" type="button">Mounts <span id="badge-mounts" class="mini-count">0</span></button>
+              <button class="subtab-btn" data-col="pets" type="button">Battle Pets <span id="badge-pets" class="mini-count">0</span></button>
+              <button class="subtab-btn" data-col="toys" type="button">Toys <span id="badge-toys" class="mini-count">0</span></button>
+              <button class="subtab-btn" data-col="heirlooms" type="button">Heirlooms <span id="badge-heirlooms" class="mini-count">0</span></button>
+              <button class="subtab-btn" data-col="transmogs" type="button">Transmog Slots <span id="badge-transmogs" class="mini-count">0</span></button>
+            </div>
+            <div class="search-wrap">
+              <input type="search" id="collection-search" class="search-input" placeholder="Filter collection by name…" aria-label="Filter collection by name" />
+            </div>
+          </div>
+          <div id="collections-grid" class="collections-grid"></div>
+        </div>
+      </section>
+
+      <!-- Tab Panel 3: Professions & Reputations -->
+      <section id="panel-professions" class="tab-panel" role="tabpanel" aria-labelledby="tab-professions" hidden>
+        <div class="panel-split">
+          <div class="panel-card">
+            <div class="card-header">
+              <h2>Professions &amp; Trade Skills</h2>
+              <span id="professions-count-pill" class="count-pill">0</span>
+            </div>
+            <div id="professions-content" class="stack-list"></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="card-header">
+              <h2>Faction Reputations</h2>
+              <span id="reputations-count-pill" class="count-pill">0 factions</span>
+            </div>
+            <div class="search-wrap rep-search-wrap">
+              <input type="search" id="rep-search" class="search-input" placeholder="Search factions or standings…" aria-label="Search factions" />
+            </div>
+            <div id="reputations-content" class="rep-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Panel 4: Appearance, Titles & Quests -->
+      <section id="panel-chronicle" class="tab-panel" role="tabpanel" aria-labelledby="tab-chronicle" hidden>
+        <div class="chronicle-grid">
+          <div class="panel-card">
+            <div class="card-header">
+              <h2>Physical Appearance</h2>
+              <span id="appearance-count-pill" class="count-pill">Customizations</span>
+            </div>
+            <div id="appearance-content" class="trait-grid"></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="card-header">
+              <h2>Earned Titles</h2>
+              <span id="titles-count-pill" class="count-pill">0 titles</span>
+            </div>
+            <div id="titles-content" class="titles-list"></div>
+          </div>
+
+          <div class="panel-card">
+            <div class="card-header">
+              <h2>Quest Chronicle</h2>
+              <span id="quests-count-pill" class="count-pill">0 completed</span>
+            </div>
+            <div id="quests-content" class="quests-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab Panel 5: Forever API Telemetry -->
+      <section id="panel-telemetry" class="tab-panel" role="tabpanel" aria-labelledby="tab-telemetry" hidden>
+        <div class="panel-card">
+          <div class="card-header">
+            <h2>Blizzard Forever API Telemetry</h2>
+            <span id="meta-fetched-at" class="count-pill"></span>
+          </div>
+          <p class="telemetry-intro">
+            The <code>profile-forever-us</code> endpoints are queried in parallel via Netlify Functions. Below is the status of all 15 sub-endpoints and the normalized payload.
+          </p>
+          <div id="telemetry-endpoints" class="telemetry-grid"></div>
+          <details class="raw-json-details">
+            <summary>Inspect Full JSON Payload</summary>
+            <pre id="raw-json-viewer" class="raw-json-pre"></pre>
+          </details>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>
+        <strong>Leronda Jenkins</strong> · World of Warcraft Forever Character Profile · Powered by Netlify Functions &amp; Battle.net API
+      </p>
+      <p id="footer-meta" class="footer-meta"></p>
+    </div>
+  </footer>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

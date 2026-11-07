@@ -1,0 +1,11 @@
+{
+  "name": "leronda-jenkins-profile",
+  "version": "1.0.0",
+  "description": "Public World of Warcraft Forever Armory profile for Leronda Jenkins",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "predev": "node -e \"if (!process.env.CLIENT_ID || !process.env.CLIENT_SECRET) { throw new Error('Missing required CLIENT_ID and/or CLIENT_SECRET environment variables.'); }\"",
+    "dev": "netlify dev"
+  }
+}
